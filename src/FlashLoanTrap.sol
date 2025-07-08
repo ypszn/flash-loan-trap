@@ -13,7 +13,7 @@ contract FlashLoanTrap is ITrap {
     address public constant RESPONSE_CONTRACT = 0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608;
 
     // Define the threshold for suspicious flash loan size
-    uint256 public constant MAX_LOAN_AMOUNT = 1000000 * 10**18; // Example: 1,000,000 units of the token (adjust as needed)
+    uint256 public constant MAX_LOAN_AMOUNT = 1000000 * 10**18; // Example: 1,000,000 units of the token
 
     // Data structure to store the loan amount
     struct CollectOutput {
@@ -22,13 +22,10 @@ contract FlashLoanTrap is ITrap {
 
     // Function to collect data about the current loan size
     function collect() external view returns (bytes memory) {
-        // Simulating data collection for the loan amount (replace with actual logic)
-        uint256 loanAmount = 2000000 * 10**18; // Example loan amount (replace with actual logic)
+        uint256 loanAmount = 2000000 * 10**18; // Example loan amount
 
-        // Query the response contract to check if it is active
         bool active = IResponseContract(RESPONSE_CONTRACT).isActive();
 
-        // Return the loan amount and whether the response contract is active
         return abi.encode(CollectOutput({loanAmount: loanAmount}), active);
     }
 
@@ -41,7 +38,6 @@ contract FlashLoanTrap is ITrap {
             return (true, bytes("Flash loan detected"));
         }
 
-        // No action needed if the loan amount is below the threshold or contract is not active
         return (false, bytes(""));
     }
 }

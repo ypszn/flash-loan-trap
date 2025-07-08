@@ -76,3 +76,5 @@ DROSERA_PRIVATE_KEY=0x.. drosera apply
 ```
 
 Congratulations! You have successfully deployed the Flash Loan trap!
+
+Note: This is a simple trap contract. Dive into the [docs](https://dev.drosera.io) to learn more about traps.
