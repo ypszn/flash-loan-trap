@@ -1,6 +1,6 @@
-# Drosera Trap Foundry Template
+# Flash Loan Attack Detection Trap
 
-This repo is for quickly bootstrapping a new Drosera project. It includes instructions for creating your first trap, deploying it to the Drosera network, and updating it on the fly.
+You can check out Drosera docs on how to create your first trap, deploy it to the Drosera network, and update it on the fly.
 
 [![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](https://dev.drosera.io "Project documentation")
 
@@ -10,34 +10,59 @@ This repo is for quickly bootstrapping a new Drosera project. It includes instru
 curl -L https://foundry.paradigm.xyz | bash
 foundryup
 
-# The trap-foundry-template utilizes node modules for dependency management
 # install Bun (optional)
 curl -fsSL https://bun.sh/install | bash
 
 # install node modules
 bun install
 
-# install vscode (optional)
-# - add solidity extension JuanBlanco.solidity
-
 # install drosera-cli
 curl -L https://app.drosera.io/install | bash
 droseraup
 ```
 
-open the VScode preferences and Select `Soldity: Change workpace compiler version (Remote)`
+## Flash Loan Trap
 
-Select version `0.8.12`
+The **FlashLoanTrap** is a smart contract designed to monitor and detect suspicious flash loan activities on the Ethereum blockchain. Here's a breakdown of what it does:
 
-## Quick Start
+### Key Features:
 
-### Hello World Trap
+1. **Monitors Loan Amounts**:
+
+   * The trap monitors the loan amount for transactions on the Ethereum network. If the loan amount exceeds a predefined threshold (`MAX_LOAN_AMOUNT`), it flags the activity as potentially suspicious (e.g., a flash loan attack).
+
+2. **Checks Response Contract**:
+
+   * The trap also interacts with a **response contract** at address `0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608` to confirm whether the contract is active by calling the `isActive()` function.
+   * This ensures that the trap only triggers a response when the response contract is active, adding an additional layer of security.
+
+3. **Triggering Alerts**:
+
+   * If the loan amount exceeds the threshold and the response contract is active, the trap triggers a response.
+   * The response can include actions like notifying stakeholders or pausing the contract to prevent further transactions, thus mitigating the potential threat from the flash loan.
+
+4. **Threshold Customization**:
+
+   * The trap allows for adjusting the threshold of what constitutes a "suspicious" loan amount (`MAX_LOAN_AMOUNT`), making it adaptable to different security requirements.
+
+### Workflow:
+
+* The trap continuously monitors transactions and loan amounts.
+* When a loan amount exceeds the threshold and the response contract is active, the trap triggers an alert or response.
+* The response ensures that the contract takes action to mitigate any potential risks from flash loans.
+
+### Purpose:
+
+The **FlashLoanTrap** aims to prevent exploits and attacks typically seen in decentralized finance (DeFi) protocols that utilize flash loans. By detecting large and suspicious loans, the trap helps safeguard the network against flash loan-based attacks or price manipulation schemes.
+
+In essence, it’s a security tool for detecting and mitigating flash loan-related vulnerabilities in real-time.
+
 
 The drosera.toml file is configured to deploy a simple "Hello, World!" trap. Ensure the drosera.toml file is set to the following configuration:
 
 ```toml
-response_contract = "0xdA890040Af0533D98B9F5f8FE3537720ABf83B0C"
-response_function = "helloworld(string)"
+response_contract = "0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608"
+response_function = "alertFlashLoan(string)"
 ```
 
 To deploy the trap, run the following commands:
@@ -50,38 +75,4 @@ forge build
 DROSERA_PRIVATE_KEY=0x.. drosera apply
 ```
 
-After successfully deploying the trap, the CLI will add an `address` field to the `drosera.toml` file.
-
-Congratulations! You have successfully deployed your first trap!
-
-### Response Trap
-
-You can then update the trap by changing its logic and recompling it or changing the path field in the `drosera.toml` file to point to the Response Trap.
-
-The Response Trap is designed to trigger a response at a specific block number. To test the Response Trap, pick a future block number and update the Response Trap.
-Specify a response contract address and function signature in the drosera.toml file to the following:
-
-```toml
-response_contract = "0x183D78491555cb69B68d2354F7373cc2632508C7"
-response_function = "responseCallback(uint256)"
-```
-
-Finally, deploy the Response Trap by running the following commands:
-
-```bash
-# Compile the Trap
-forge build
-
-# Deploy the Trap
-DROSERA_PRIVATE_KEY=0x.. drosera apply
-```
-
-> Note: The `DROSERA_PRIVATE_KEY` environment variable can be used to deploy traps. You can also set it in the drosera.toml file as `private_key = "0x.."`.
-
-## Testing
-
-Example tests are included in the `tests` directory. They simulate how Drosera Operators execute traps and determine if a response should be triggered. To run the tests, execute the following command:
-
-```bash
-forge test
-```
+Congratulations! You have successfully deployed the Flash Loan trap!

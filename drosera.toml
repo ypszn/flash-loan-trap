@@ -1,3 +1,7 @@
+path = "out/FlashLoanTrap.sol/FlashLoanTrap.json"
+response_contract = "0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608"
+response_function = "alertFlashLoan(string)"
+
 ethereum_rpc = "https://ethereum-hoodi-rpc.publicnode.com"
 drosera_rpc = "https://relay.hoodi.drosera.io"
 eth_chain_id = 560048
@@ -5,13 +9,21 @@ drosera_address = "0x91cB447BaFc6e0EA0F4Fe056F5a9b1F14bb06e5D"
 
 [traps]
 
-[traps.mytrap]
-path = "out/HelloWorldTrap.sol/HelloWorldTrap.json"
-response_contract = "0x183D78491555cb69B68d2354F7373cc2632508C7"
-response_function = "helloworld(string)"
+[traps.flashLoanTrap]
+path = "out/FlashLoanTrap.sol/FlashLoanTrap.json"
+response_contract = "0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608"
+response_function = "alertFlashLoan(string)"
 cooldown_period_blocks = 33
 min_number_of_operators = 1
 max_number_of_operators = 2
 block_sample_size = 10
 private_trap = true
-whitelist = []
+whitelist = ["0x00b4eb570fb19b30217c9884f31c736858c12208"]
+address = "0xcaC80510940e0Dd21F28BD9593B86d257bA3e269"
+
+# New Users/Migrate:
+# address = ""  
+
+# Existing Users:
+# If you've deployed a trap with your wallet previously (Hoodi not Holesky), add your trap address here:
+# address = "TRAP_ADDRESS"
