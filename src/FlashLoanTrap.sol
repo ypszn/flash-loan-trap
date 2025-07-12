@@ -9,33 +9,30 @@ interface IResponseContract {
 }
 
 contract FlashLoanTrap is ITrap {
-    // Updated response contract address
     address public constant RESPONSE_CONTRACT = 0x25E2CeF36020A736CF8a4D2cAdD2EBE3940F4608;
 
-    // Define the threshold for suspicious flash loan size
-    uint256 public constant MAX_LOAN_AMOUNT = 1000000 * 10**18; // Example: 1,000,000 units of the token
+    // Max suspicious flash loan amount: 1,000,000 DRO (18 decimals)
+    uint256 public constant MAX_LOAN_AMOUNT = 1_000_000 ether;
 
-    // Data structure to store the loan amount
     struct CollectOutput {
-        uint256 loanAmount;
+        uint256 loanAmountDRO; // In DRO with 18 decimals
     }
 
-    // Function to collect data about the current loan size
     function collect() external view returns (bytes memory) {
-        uint256 loanAmount = 2000000 * 10**18; // Example loan amount
+        // Simulated flash loan amount: 2,000,000 DRO
+        uint256 simulatedLoanAmount = 2_000_000 ether;
 
+        // Use response contract toggle
         bool active = IResponseContract(RESPONSE_CONTRACT).isActive();
 
-        return abi.encode(CollectOutput({loanAmount: loanAmount}), active);
+        return abi.encode(CollectOutput({loanAmountDRO: simulatedLoanAmount}), active);
     }
 
-    // Function to validate if the loan amount exceeds the defined threshold
     function shouldRespond(bytes[] calldata data) external pure returns (bool, bytes memory) {
         (CollectOutput memory current, bool active) = abi.decode(data[0], (CollectOutput, bool));
 
-        // Check if the loan amount exceeds the threshold and the contract is active
-        if (current.loanAmount > MAX_LOAN_AMOUNT && active) {
-            return (true, bytes("Flash loan detected"));
+        if (current.loanAmountDRO > MAX_LOAN_AMOUNT && active) {
+            return (true, bytes("Flash loan in DRO detected"));
         }
 
         return (false, bytes(""));
